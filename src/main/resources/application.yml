@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/BusinessManager
+    username: sayari
+    password: sayari
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: sayarim558@gmail.com
+    password: gcvp dlux hezi qxdw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: "*"
+        starttls:
+          enable: true
+    protocol: smtp
+
+
+springdoc:
+  default-produces-media-type: application/json
+
+server:
+  port: 8020
+
+
+spring.batch.jdbc.initialize-schema: always
+jwt_secret:
+  sayariMohamed123123
+jwt.expiration-time:
+  36000000    # 10h en millisecondes (1000 * 60 * 60 * 10)
+jwt.issuer:
+  SymatiqueBuissnesManager
