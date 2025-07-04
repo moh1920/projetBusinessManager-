@@ -1,0 +1,14 @@
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <input formControlName="username" placeholder="Nom d'utilisateur" required />
+  <input formControlName="email" type="email" placeholder="Email" required />
+  <input formControlName="firstName" placeholder="Prénom" required />
+  <input formControlName="lastName" placeholder="Nom" required />
+  <input formControlName="password" type="password" placeholder="Mot de passe" required />
+
+  <select formControlName="roleUser" required>
+    <option value="" disabled>Sélectionner un rôle</option>
+    <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
+  </select>
+
+  <button type="submit" [disabled]="registerForm.invalid">Créer l'utilisateur</button>
+</form>
