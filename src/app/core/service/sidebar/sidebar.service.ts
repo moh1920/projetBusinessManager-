@@ -87,14 +87,21 @@ export class SidebarService {
         showSubRoute: true,
         menu: modules.map(module => ({
           menuValue: module.title,
-          hasSubRoute: false,
-          showSubRoute: false,
-          route: routes.registerbyStepper,
+          hasSubRoute: module.sousModules.length > 0,
+          showSubRoute: true,
           icon: 'grid',
           base1: 'managementEntreprise',
+          subMenus: module.sousModules.map(sous => ({
+            menuValue: sous.titreSousModule,
+            route: sous.link,
+            hasSubRoute: false,
+            showSubRoute: false,
+            customSubmenuTwo: false,
+          }))
         }))
       }
     ];
+
     this.sidebarDataSubject.next(data);
   }
 
