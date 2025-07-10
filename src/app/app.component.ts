@@ -7,6 +7,7 @@ import {
 } from '@angular/router';
 import {SpinnerService} from './core/core.index';
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

@@ -77,6 +77,45 @@ const routes: Routes = [
             (m) => m.DashboardModule
           ),
       },
+      {
+        path: 'entreprise',
+        loadChildren: () =>
+          import('./entreprise/entreprise.module').then(
+            (m) => m.EntrepriseModule
+          ),
+      }, {
+        path: 'departement',
+        loadChildren: () =>
+          import('./departement/departement.module').then(
+            (m) => m.DepartementModule
+          ),
+      },
+      {
+        path: 'module',
+        loadChildren: () =>
+          import('./module/module-routing.module').then(
+            (m) => m.ModuleRoutingModule
+          ),
+      },{
+        path: 'projet',
+        loadChildren: () =>
+          import('./projet/projet-routing.module').then(
+            (m) => m.ProjetRoutingModule
+          ),
+      },{
+        path: 'client',
+        loadChildren: () =>
+          import('./client/client-routing.module').then(
+            (m) => m.ClientRoutingModule
+          ),
+      },
+      {
+        path: 'equipe',
+        loadChildren: () =>
+          import('./equipe/equipe-routing.module').then(
+            (m) => m.EquipeRoutingModule
+          ),
+      },
 
       {
         path: 'user-management',
@@ -114,14 +153,12 @@ const routes: Routes = [
         path: 'reports',
         loadChildren: () =>
           import('./reports/reports.module').then((m) => m.ReportsModule),
-      },
-      {
-        path: 'entreprise',
+      },{
+        path: 'documentation',
         loadChildren: () =>
-          import('./module-entreprise/module-entreprise.module').then(
-            (m) => m.ModuleEntrepriseModule
-          ),
+          import('./documentation/documentation-routing.module').then((m) => m.DocumentationRoutingModule),
       },
+
 
     ],
   },

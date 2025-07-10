@@ -25,6 +25,7 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
+              "node_modules/@syncfusion/ej2-material-theme/styles/material.css",
               "src/assets/icons/fontawesome/css/fontawesome.min.css",
               "src/assets/icons/fontawesome/css/all.min.css",
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",

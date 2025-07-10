@@ -940,8 +940,8 @@ export class routes {
   public static get success3(): string {
     return this.base + '/success-3';
   }
-  public static get permissions(): string {
-    return this.usersManagement + '/permissions';
+  public static permissions(id: number | undefined): string {
+    return this.usersManagement + '/permissions/' + id;
   }
   public static get registerbyStepper(): string {
     return this.base + '/stepperCompany';

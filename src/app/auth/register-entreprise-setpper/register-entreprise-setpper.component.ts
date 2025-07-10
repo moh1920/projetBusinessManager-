@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule} from "@angular/forms";
 import {Validators} from "ngx-editor";
 import {NgForOf, NgIf} from "@angular/common";
 import {UserService} from "../service/user/user.service";
-import {EntrepriseService} from "../service/entreprise/entreprise.service";
+import {EntrepriseService} from "../../core/service/entreprise/entreprise.service";
 import {MatStep, MatStepLabel, MatStepper} from "@angular/material/stepper";
 import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -96,7 +96,7 @@ export class RegisterEntrepriseSetpperComponent implements OnInit {
       await this.createEntreprise();
 
       if (this.userFormGroup.valid) {
-        this.userService.registerUser(this.userFormGroup.value,this.idEntreprise).subscribe({
+        this.userService.registerUser(this.userFormGroup.value,this.idEntreprise,0).subscribe({
           next: () => {
             this.userEntrepriseId = this.idEntreprise;
             console.log("Id entreprise:", this.userEntrepriseId);

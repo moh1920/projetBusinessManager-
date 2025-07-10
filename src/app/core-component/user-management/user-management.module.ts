@@ -8,6 +8,7 @@ import { sharedModule } from 'src/app/shared/shared.module';
 import { RolesPermissionsComponent } from './roles-permissions/roles-permissions.component';
 import { UsersComponent } from './users/users.component';
 import { PermissionsComponent } from './permissions/permissions.component';
+import {PickListModule} from "primeng/picklist";
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { PermissionsComponent } from './permissions/permissions.component';
   imports: [
     CommonModule,
     UserManagementRoutingModule,
-    sharedModule
+    sharedModule,
+    PickListModule
   ]
 })
 export class UserManagementModule { }

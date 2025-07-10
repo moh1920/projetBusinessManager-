@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, map, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+import {PermissionDto} from "../../model/permissionDto.model";
+import {Entreprise} from "../../model/entreprise.model";
 
 
 export interface AuthRequest {
@@ -9,7 +11,12 @@ export interface AuthRequest {
 }
 
 export interface AuthResponse {
+  idUsers: number;
+  userName: string;
+  permissionDtos: PermissionDto[];
   token: string;
+  entreprise : Entreprise;
+  idRoleUser : number ;
 }
 @Injectable({
   providedIn: 'root'
@@ -24,14 +31,6 @@ export class AuthService {
 
   login(credentials: AuthRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
-      .pipe(
-        map(response => {
-          if (response.token) {
-            this.setToken(response.token);
-          }
-          return response;
-        })
-      );
   }
 
   logout(): void {
@@ -67,6 +66,27 @@ export class AuthService {
     }
   }
 
+
+  decodeToken(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+
+    try {
+      return JSON.parse(atob(payload));
+    } catch (e) {
+      console.error('Erreur de décodage du token', e);
+      return null;
+    }
+  }
+
+
+  getRoles(): string[] {
+    const decoded = this.decodeToken();
+    return decoded?.roles || [];
+  }
 
 }
 

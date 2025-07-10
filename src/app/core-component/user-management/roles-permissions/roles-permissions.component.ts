@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import {
   DataService,
-  pageSelection,
-  apiResultFormat,
+
   routes,
 } from 'src/app/core/core.index';
 import { SidebarService } from 'src/app/core/service/sidebar/sidebar.service';
-import { rolesPermissions } from 'src/app/shared/model/page.model';
-import { PaginationService, tablePageSize } from 'src/app/shared/shared.index';
+import { PaginationService } from 'src/app/shared/shared.index';
 import Swal from 'sweetalert2';
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {RoleService} from "../../../core/service/role/role.service";
+import {Validators} from "ngx-editor";
+import {Role} from "../../../model/role.model";
 interface data {
   value: string;
 }
@@ -21,7 +23,7 @@ interface data {
   templateUrl: './roles-permissions.component.html',
   styleUrl: './roles-permissions.component.scss',
 })
-export class RolesPermissionsComponent {
+export class RolesPermissionsComponent implements OnInit{
   initChecked = false;
   public routes = routes;
   isCollapsed: boolean = false;
@@ -44,56 +46,30 @@ export class RolesPermissionsComponent {
     { value: 'Shop Owner' },
   ];
   // pagination variables
-  public tableData: Array<rolesPermissions> = [];
+  public tableData: Array<Role> = [];
   public pageSize = 10;
   public serialNumberArray: Array<number> = [];
   public totalData = 0;
   showFilter = false;
-  dataSource!: MatTableDataSource<rolesPermissions>;
+  dataSource!: MatTableDataSource<Role>;
   public searchDataValue = '';
+  roleForm!: FormGroup;
+  editRoleForm!: FormGroup;
+  currentRoleId!: number;
+
+
   //** / pagination variables
 
   constructor(
     private data: DataService,
     private pagination: PaginationService,
     private router: Router,
-    private sidebar: SidebarService
+    private sidebar: SidebarService,
+    private fb: FormBuilder,
+    private roleService : RoleService
   ) {
-    this.data.getDataTable().subscribe((apiRes: apiResultFormat) => {
-      this.totalData = apiRes.totalData;
-      this.pagination.tablePageSize.subscribe((res: tablePageSize) => {
-        if (this.router.url == this.routes.rolesPermission) {
-          this.getTableData({ skip: res.skip, limit: this.totalData  });
-          this.pageSize = res.pageSize;
-        }
-      });
-    });
   }
 
-  private getTableData(pageOption: pageSelection): void {
-    this.data.getRolesPermissions().subscribe((apiRes: apiResultFormat) => {
-      this.tableData = [];
-      this.serialNumberArray = [];
-      this.totalData = apiRes.totalData;
-      apiRes.data.map((res: rolesPermissions, index: number) => {
-        const serialNumber = index + 1;
-        if (index >= pageOption.skip && serialNumber <= pageOption.limit) {
-          res.sNo = serialNumber;
-          this.tableData.push(res);
-          this.serialNumberArray.push(serialNumber);
-        }
-      });
-      this.dataSource = new MatTableDataSource<rolesPermissions>(
-        this.tableData
-      );
-      this.pagination.calculatePageSize.next({
-        totalData: this.totalData,
-        pageSize: this.pageSize,
-        tableData: this.tableData,
-        serialNumberArray: this.serialNumberArray,
-      });
-    });
-  }
 
   public sortData(sort: Sort) {
     const data = this.tableData.slice();
@@ -113,7 +89,7 @@ export class RolesPermissionsComponent {
     this.tableData = this.dataSource.filteredData;
   }
 
-  confirmColor() {
+  confirmColor(roleId : any) {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: ' btn btn-success',
@@ -133,11 +109,29 @@ export class RolesPermissionsComponent {
       })
       .then((result) => {
         if (result.isConfirmed) {
-          swalWithBootstrapButtons.fire(
-            'Deleted!',
-            'Your file has been deleted.',
-            'success'
-          );
+          // 🔥 Appel réel au backend pour supprimer
+          this.roleService.deleteRole(roleId).subscribe({
+            next: () => {
+              swalWithBootstrapButtons.fire(
+                'Deleted!',
+                'The role has been deleted.',
+                'success'
+              );
+
+              this.roleService.getAllRoles().subscribe(data =>{
+                this.tableData = data ;
+                console.log(data);
+              })
+            },
+            error: (err) => {
+              console.error('Erreur lors de la suppression', err);
+              swalWithBootstrapButtons.fire(
+                'Error',
+                'Erreur lors de la suppression du rôle.',
+                'error'
+              );
+            },
+          });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire(
             'Cancelled',
@@ -151,16 +145,53 @@ export class RolesPermissionsComponent {
   openFilter() {
     this.filter = !this.filter;
   }
-  selectAll(initChecked: boolean) {
-    if (!initChecked) {
-      this.tableData.forEach((f) => {
-        f.isSelected = true;
-      });
-    } else {
-      this.tableData.forEach((f) => {
-        f.isSelected = false;
-      });
-    }
+
+
+
+  ////////////////////////////////
+
+  openEditModal(role: Role): void {
+    console.log(
+      role
+    );
+    this.currentRoleId = role.id!;
+    this.editRoleForm.patchValue({
+      name: role.name
+    });
   }
-  
+
+
+  ngOnInit(): void {
+    this.roleForm = this.fb.group({
+      name: ['', Validators.required]
+    });
+    this.editRoleForm = this.fb.group({
+      name: ['', Validators.required]
+    });
+    this.roleService.getAllRoles().subscribe(data =>{
+      this.tableData = data ;
+      console.log(data);
+    })
+  }
+
+  onSubmit() {
+   this.roleService.createRole(this.roleForm.value).subscribe(data => {
+     console.log(data);
+     this.roleService.getAllRoles().subscribe(data =>{
+       this.tableData = data ;
+       console.log(data);
+     })
+   })
+  }
+
+  onUpdateRole() {
+     this.roleService.updateRole(this.currentRoleId,this.editRoleForm.value).subscribe(data => {
+       console.log(data);
+       this.roleService.getAllRoles().subscribe(data =>{
+         this.tableData = data ;
+         console.log(data);
+       })
+
+     })
+  }
 }

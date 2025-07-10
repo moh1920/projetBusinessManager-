@@ -1,0 +1,50 @@
+<div class="root">
+  <div class="navbar">
+    <div class="navbar-brand">
+      <div class="navbar-item">
+        <h1 class="app-name">Kanban</h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="board-bar">
+      <p class="board-name">{{ board.name }}</p>
+    </div>
+
+    <div class="board-wrapper">
+      <div class="board-columns" cdkDropListGroup>
+        <div class="board-column" *ngFor="let column of board.columns">
+          <div class="column-title">{{ column.name }}</div>
+          <div class="tasks-container"
+               cdkDropList
+               [cdkDropListData]="column.tasks"
+               (cdkDropListDropped)="drop($event)">
+            <div class="task" *ngFor="let item of column.tasks" cdkDrag>
+              <div class="task-card">
+                <div><strong>Titre :</strong> {{ item.titre }}</div>
+                <div *ngIf="item.description"><strong>Description :</strong> {{ item.description }}</div>
+                <div><strong>Début :</strong> {{ item.dateDebut | date: 'shortDate' }}</div>
+                <div><strong>Fin :</strong> {{ item.dateFin | date: 'shortDate' }}</div>
+                <div><strong>Statut :</strong> {{ item.statut }}</div>
+                <div><strong>Priorité :</strong> {{ item.priorite }}</div>
+                <div *ngIf="item.duree"><strong>Durée :</strong> {{ item.duree }} jours</div>
+                <div><strong>Progrès :</strong> {{ item.progres }}%</div>
+                <div *ngIf="item.predecesseur"><strong>Prédécesseur :</strong> {{ item.predecesseur }}</div>
+                <div *ngIf="item.categorieTache"><strong>Catégorie :</strong> {{ item.categorieTache.nom }}</div>
+                <div *ngIf="item.sousTaches && item.sousTaches.length > 0">
+                  <strong>Sous-tâches :</strong>
+                  <ul>
+                    <li *ngFor="let st of item.sousTaches">
+                      {{ st.titre }} ({{ st.type }}) - {{ st.progres }}%
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

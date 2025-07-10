@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import { routes } from '../../core.index';
-import {Module} from "../../../model/module.model";
 import {HttpClient} from "@angular/common/http";
+import {ModuleTittle} from "../../../model/moduleTittle.model";
+import {SousModule} from "../../../model/sousModule.model";
+import {Module} from "../../../model/module.model";
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +18,8 @@ export class SidebarService {
 
 
 
-  private baseUrl = 'http://localhost:8020/module/getAllModule'; // adapte le port/URL selon ton backend
-  constructor(private http: HttpClient,) {
+  private baseUrl = 'http://localhost:8020/module/getAllModulesTittle';
+  constructor(private http: HttpClient) {
 
   }
 
@@ -64,8 +66,8 @@ export class SidebarService {
     }
   }
 
-  getAllModuleTitles(): Observable<Module[]> {
-    return this.http.get<Module[]>(`${this.baseUrl}`);
+  getAllModuleTitles(): Observable<ModuleTittle[]> {
+    return this.http.get<ModuleTittle[]>(`${this.baseUrl}`);
   }
 
 
@@ -77,21 +79,23 @@ export class SidebarService {
   }
 
 
-  generateSidebarData(modules: Module[]) {
-    const data = [
-      {
-        tittle: 'Main',
+  generateSidebarData(modules: ModuleTittle[]) {
+    const data = modules.map(moduleTitle => {
+      const activeModules = moduleTitle.modules.filter((mod: Module) => mod.status === true);
+
+      return {
+        tittle: moduleTitle.moduleTittle,
         showAsTab: false,
         separateRoute: false,
-        hasSubRoute: false,
+        hasSubRoute: activeModules.some((mod: Module) => mod.sousModules.length > 0),
         showSubRoute: true,
-        menu: modules.map(module => ({
-          menuValue: module.title,
-          hasSubRoute: module.sousModules.length > 0,
+        menu: activeModules.map((mod: Module) => ({
+          menuValue: mod.title,
+          hasSubRoute: mod.sousModules.length > 0,
           showSubRoute: true,
           icon: 'grid',
           base1: 'managementEntreprise',
-          subMenus: module.sousModules.map(sous => ({
+          subMenus: mod.sousModules.map((sous: SousModule) => ({
             menuValue: sous.titreSousModule,
             route: sous.link,
             hasSubRoute: false,
@@ -99,8 +103,8 @@ export class SidebarService {
             customSubmenuTwo: false,
           }))
         }))
-      }
-    ];
+      };
+    });
 
     this.sidebarDataSubject.next(data);
   }

@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="profile-contentname">
-                        <h2>William Castillo</h2>
+                        <h2>{{ user.username }}</h2>
                         <h4>Updates Your Photo and Personal Details.</h4>
                     </div>
                 </div>
@@ -31,41 +31,31 @@
             <div class="col-lg-6 col-sm-12">
                 <div class="input-blocks">
                     <label class="form-label">First Name</label>
-                    <input type="text" class="form-control" value="William">
+                    <input type="text" class="form-control" value="{{user.username}}">
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12">
                 <div class="input-blocks">
                     <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control" value="Castilo">
+                    <input type="text" class="form-control" value="{{user.username}}">
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12">
                 <div class="input-blocks">
                     <label>Email</label>
-                    <input type="email" class="form-control" value="william@example.com">
+                    <input type="email" class="form-control" value="{{user.email}}">
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12">
                 <div class="input-blocks">
                     <label class="form-label">Phone</label>
-                    <input type="text" value="+1452 876 5432">
+                    <input type="text" value="{{user.phone}}">
                 </div>
             </div>
             <div class="col-lg-6 col-sm-12">
                 <div class="input-blocks">
-                    <label class="form-label">User Name</label>
-                    <input type="text" class="form-control" value="William Castilo">
-                </div>
-            </div>
-            <div class="col-lg-6 col-sm-12">
-                <div class="input-blocks">
-                    <label class="form-label">Password</label>
-                    <div class="pass-group">
-                        <input [type]="password[1] ? 'text' : 'password' " class="pass-input form-control">
-                        <span class="fas toggle-password" [ngClass]=" password[1] ? 'fa-eye' : 'fa-eye-slash'"
-                            (click)="togglePassword(1)"></span>
-                    </div>
+                    <label class="form-label">User Role</label>
+                    <input type="text" class="form-control" value="{{user.roles}}">
                 </div>
             </div>
             <div class="col-12">

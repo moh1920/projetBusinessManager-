@@ -1,6 +1,13 @@
+import {Entreprise} from "./entreprise.model";
+import {Role} from "./role.model";
+
 export interface UserRequest {
-  email: string;
+  id?: number;
+  email?: string;
+  phone?: number;
   username: string;
   password: string;
-  entrepriseId?: number; // optionnel si tu veux l’associer plus tard
+  roles?: Role[];
+  enabled?: boolean;
+  entreprise?: Entreprise;
 }

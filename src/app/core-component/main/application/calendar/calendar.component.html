@@ -5,52 +5,90 @@
     </div>
   </div>
 </div>
+
 <div class="row">
   <div class="col-lg-3 col-md-4">
-    <h4 class="card-title">Drag & Drop Event</h4>
-    <div id="calendar-events" class="mb-3">
-      <div class="calendar-events" data-class="bg-info">
-        <i class="fas fa-circle text-info"></i> My Event One
-      </div>
-      <div class="calendar-events" data-class="bg-success">
-        <i class="fas fa-circle text-success"></i> My Event Two
-      </div>
-      <div class="calendar-events" data-class="bg-danger">
-        <i class="fas fa-circle text-danger"></i> My Event Three
-      </div>
-      <div class="calendar-events" data-class="bg-warning">
-        <i class="fas fa-circle text-warning"></i> My Event Four
-      </div>
-    </div>
-    <div class="checkbox mb-3">
-      <input id="drop-remove" class="margin-drop me-1" type="checkbox" />
-      <label for="drop-remove"> Remove after drop </label>
-    </div>
     <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#add_new_event"
-      class="btn mb-3 btn-primary btn-block w-100">
+       class="btn mb-3 btn-primary btn-block w-100">
       <i class="fas fa-plus"></i> Add Category
     </a>
+
+    <!-- Légende des couleurs -->
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Légende des catégories</h5>
+      </div>
+      <div class="card-body">
+        <div class="legend-items">
+          <div class="legend-item d-flex align-items-center mb-2"
+               *ngFor="let categorie of categorieList">
+            <span class="legend-color-box me-2"
+                  [style.backgroundColor]="mapEnumToColor(categorie.colorCategorie)"
+                  [style.width.px]="20"
+                  [style.height.px]="20"
+                  [style.border-radius.px]="3">
+            </span>
+            <span class="legend-label">{{ categorie.titre }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
   <div class="col-lg-9 col-md-8">
     <div class="col-auto d-flex justify-content-end mb-2">
+      <button class="btn btn-outline-secondary me-2" (click)="refreshCalendar()">
+        <i class="fas fa-refresh"></i> Actualiser
+      </button>
       <a href="javascript:void(0)" class="btn btn-primary" data-bs-toggle="modal"
-      data-bs-target="#add_event">Create Event</a>
+         data-bs-target="#add_event">Create Event</a>
     </div>
+
+    <!-- Message de chargement -->
+    <div *ngIf="isLoading" class="text-center p-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p class="mt-2">Chargement des événements...</p>
+    </div>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="error" class="alert alert-danger" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      {{ error }}
+      <button class="btn btn-outline-danger btn-sm ms-2" (click)="refreshCalendar()">
+        Réessayer
+      </button>
+    </div>
+
     <div class="card bg-white">
       <div class="card-body">
-        @if (calendarVisible) {
-          <full-calendar [options]='calendarOptions'>
-            <ng-template #eventContent let-arg>
-              <b>{{ arg.timeText }}</b>
-              <i>{{ arg.event.title }}</i>
-            </ng-template>
-          </full-calendar>
-        }
+        <full-calendar
+          *ngIf="calendarVisible && !isLoading"
+          [options]="calendarOptions">
+          <ng-template #eventContent let-arg>
+            <div class="custom-event-content">
+              <span class="event-color-indicator"
+                    [style.backgroundColor]="arg.event.backgroundColor">
+              </span>
+              <div class="event-details">
+                <div class="event-time" *ngIf="arg.timeText">
+                  <strong>{{ arg.timeText }}</strong>
+                </div>
+                <div class="event-title">
+                  {{ arg.event.title }}
+                </div>
+                <div class="event-category" *ngIf="arg.event.extendedProps?.categoryTitle">
+                  <small class="text-muted">{{ arg.event.extendedProps.categoryTitle }}</small>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </full-calendar>
       </div>
     </div>
   </div>
 </div>
-
 
 <!-- Add Event Modal -->
 <div id="add_event" class="modal custom-modal fade" role="dialog">
@@ -64,15 +102,22 @@
       </div>
       <div class="modal-body">
         <form>
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Event Name <span class="text-danger">*</span></label>
-            <input class="form-control" type="text" />
+            <input class="form-control" type="text" placeholder="Nom de l'événement" />
           </div>
-          <div class="form-group">
+          <div class="form-group mb-3">
             <label>Event Date <span class="text-danger">*</span></label>
             <div class="cal-icon">
-              <input type="text" class="form-control" name="dp" />
+              <input type="text" class="form-control" name="dp" placeholder="Sélectionner une date" />
             </div>
+          </div>
+          <div class="form-group mb-3">
+            <label>Catégorie</label>
+            <select class="form-select">
+              <option value="">Sélectionner une catégorie</option>
+              <!-- Options à remplir dynamiquement avec les catégories disponibles -->
+            </select>
           </div>
           <div class="submit-section">
             <button class="btn btn-primary submit-btn">Submit</button>
@@ -88,37 +133,40 @@
 <div class="modal custom-modal fade" id="add_new_event">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Add Category</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true">
-        </button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="form-group">
-            <label>Category Name</label>
-            <input class="form-control form-white" placeholder="Enter name" type="text"
-              name="category-name" />
-            </div>
-            <div class="form-group mb-0">
-              <label>Choose Category Color</label>
-              <select class="form-white form-select">
-                <option value="success">Success</option>
-                <option value="danger">Danger</option>
-                <option value="info">Info</option>
-                <option value="primary">Primary</option>
-                <option value="warning">Warning</option>
-                <option value="inverse">Inverse</option>
-              </select>
-            </div>
-            <div class="submit-section">
-              <button type="button" class="btn btn-primary save-category submit-btn" data-bs-dismiss="modal">
-                Save
-              </button>
-            </div>
-          </form>
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+        <div class="modal-header">
+          <h4 class="modal-title">Add Category</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
         </div>
-      </div>
+        <div class="modal-body">
+          <div class="form-group mb-3">
+            <label>Category Name</label>
+            <input type="text"
+                   class="form-control"
+                   placeholder="Enter name"
+                   formControlName="titre" />
+          </div>
+
+          <div class="form-group">
+            <label for="color">Couleur</label>
+            <select id="color" class="form-control" formControlName="colorCategorie">
+              <option value="" disabled>Choisir une couleur</option>
+              <option *ngFor="let color of getAvailableColors()" [ngValue]="color.enum">
+                {{ color.name }}
+              </option>
+            </select>
+          </div>
+
+
+          <div class="submit-section">
+            <button type="submit" class="btn btn-primary submit-btn" [disabled]="categoryForm.invalid" data-bs-dismiss="modal">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-  <!-- /Add Category Modal -->
+</div>
+
+<!-- /Add Category Modal -->

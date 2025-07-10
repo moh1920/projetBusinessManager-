@@ -4,6 +4,8 @@ import { routes } from 'src/app/core/helpers/routes';
 import {AuthService} from "../../service/auth.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {Validators} from "ngx-editor";
+import {PermissionDto} from "../../../model/permissionDto.model";
+import {ModuleService} from "../../../core/service/Module/module.service";
 
 @Component({
   selector: 'app-signin',
@@ -17,13 +19,16 @@ export class SigninComponent {
   loading = false;
   errorMessage = '';
   constructor(private router: Router,private fb: FormBuilder,
-              private authService: AuthService,) {
+              private authService: AuthService,
+              private moduleService:ModuleService) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
   }
 
+
+  responseLogin !: PermissionDto;
   navigation() {
     if (this.loginForm.valid) {
       this.loading = true;
@@ -34,7 +39,21 @@ export class SigninComponent {
 
       this.authService.login(credentials).subscribe({
         next: (response) => {
-          console.log('Login successful:', response);
+          console.log("response de login " ,response);
+          localStorage.removeItem("myLSkey");
+          localStorage.setItem('myLSkey', btoa(JSON.stringify({
+            token: response.token,
+            name: response.userName,
+            userId: response.idUsers,
+            permission: response.permissionDtos,
+            entreprise: response.entreprise,
+            idRole: response.idRoleUser
+          })));
+
+          this.moduleService.updateStatusByRole(response.idRoleUser).subscribe(()=>{
+            console.log("update de sidbar effecter avec succes");
+          })
+
           this.router.navigate([routes.adminDashboard])
         },
         error: (error) => {

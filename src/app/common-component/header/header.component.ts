@@ -3,6 +3,9 @@ import { NavigationStart, Router, Event as RouterEvent } from '@angular/router';
 import {CommonService, SettingsService, SidebarService} from 'src/app/core/core.index';
 import { WebstorgeService } from 'src/app/shared/webstorge.service';
 import { routes } from 'src/app/core/helpers/routes';
+import {ResponseDto} from "../../model/reponseDto.model";
+import {Role} from "../../model/role.model";
+import {AuthService} from "../../auth/service/auth.service";
 
 @Component({
   selector: 'app-header',
@@ -31,7 +34,8 @@ export class HeaderComponent implements OnInit{
     private common: CommonService,
     private sidebar: SidebarService,
     private webStorage: WebstorgeService,
-    private settings: SettingsService
+    private settings: SettingsService,
+    private authService : AuthService
 
   ) {
     this.activePath = this.Router.url.split('/')[2];
@@ -60,6 +64,7 @@ export class HeaderComponent implements OnInit{
 
   ngOnInit(): void {
     this.lightMode=true;
+    this.getUserAuthData();
     }
 
 
@@ -103,4 +108,27 @@ export class HeaderComponent implements OnInit{
     }
     localStorage.setItem('themeMode', theme);
   }
+
+
+
+
+
+  userName! : string | undefined ;
+  roleName!: string[]
+
+  getUserAuthData(){
+    const item = localStorage.getItem('myLSkey');
+    let currentUser: ResponseDto | null = null;
+
+    if (item) {
+      currentUser = JSON.parse(atob(item));
+      console.log('User connecté:', currentUser?.name);
+      this.userName = currentUser?.name;
+      console.log('Token:', currentUser?.token);
+      console.log('Permissions:', currentUser?.permission);
+      console.log('Entreprise:', currentUser?.entreprise.nom);
+    }
+    this.roleName =  this.authService.getRoles() ;
+  }
+
 }

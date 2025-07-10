@@ -21,6 +21,7 @@ export class WebstorgeService {
   public Logout(): void {
     localStorage.removeItem('authorized');
     localStorage.removeItem('loginTime');
+    localStorage.removeItem("myLSkey");
     this.router.navigate(['/auth/signin']);
   }
 }
