@@ -71,6 +71,7 @@ public class AuthController {
             response.setPermissionDtos(permissionDtoList);
             response.setIdUsers(user.getId());
             response.setToken(token);
+            response.setIdRoleUser(user.getRoles().get(0).getId());
 
 
 

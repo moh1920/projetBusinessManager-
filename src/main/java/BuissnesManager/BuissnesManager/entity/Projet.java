@@ -1,6 +1,7 @@
 package BuissnesManager.BuissnesManager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,23 +13,30 @@ import java.util.List;
 
 
 @Entity
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Equipe {
+public class Projet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String nom;
     private String description;
+    private LocalDate dateDebut;
+    private LocalDate dateFin;
 
-    private LocalDate dateCreation;
+    @Enumerated(EnumType.STRING)
+    private StatutProjet statut;
 
-    @OneToMany(mappedBy = "equipe")
-    @JsonIgnore
-    private List<Membre> membres;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("projets")
+    private CategorieProjet categorieProjet;
+
+    @OneToMany(mappedBy = "projet")
+    @JsonIgnoreProperties("projet")
+    private List<Tache> taches ;
 
 
 }

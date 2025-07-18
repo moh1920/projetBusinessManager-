@@ -61,9 +61,7 @@ public class UserService {
         user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setEnabled(true);
-        if (idEquipe!=0){
-            user.setEquipe(equipeRepo.findById(idEquipe).get());
-        }
+
         user.setEntreprise(entrepriseRepo.findById(idEntreprise).get());
         return userRepository.save(user);
     }
@@ -142,6 +140,13 @@ public class UserService {
 
         userRepository.save(user);
     }
+//    public List<User> getAllUsersNotAffectedToMember() {
+//        return userRepository.findAll()
+//                .stream()
+//                .filter(user -> user.getMembre() == null)
+//                .collect(Collectors.toList());
+//    }
+
 
 
 

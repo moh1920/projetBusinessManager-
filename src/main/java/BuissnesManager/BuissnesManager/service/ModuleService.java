@@ -9,65 +9,110 @@ import BuissnesManager.BuissnesManager.repository.PermissionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ModuleService {
 
     @Autowired
-    private ModuleRepo moduleRepo ;
+    private ModuleRepo moduleRepo;
     @Autowired
     private PermissionRepo permissionRepo;
 
     @Autowired
     private ModuleTittleRepo moduleTittleRepo;
-    public List<ModuleTittle> getAllModuleTitlle(){
+
+    public List<ModuleTittle> getAllModuleTitlle() {
         return moduleTittleRepo.findAll();
     }
-    public List<Module> getAllModule(){
+
+    public List<Module> getAllModule() {
         return moduleRepo.findAll();
     }
 
-    public Module getByIdModule(Long idModule){
+    public Module getByIdModule(Long idModule) {
         return moduleRepo.findById(idModule).get();
     }
 
 
-    public List<Module> getModuleTittleByRole(Long idRole){
+    public List<Module> getModuleTittleByRole(Long idRole) {
         return permissionRepo.getModuleByIdRole(idRole);
     }
 
-    public Set<ModuleTittle> getAllModuleTittleByIdRole(Long idRole){
+    public Set<ModuleTittle> getAllModuleTittleByIdRole(Long idRole) {
         List<Module> modules = permissionRepo.getModuleByIdRole(idRole);
         Set<ModuleTittle> moduleTittles = new HashSet<>();
 
-        for (Module module : modules){
+        for (Module module : modules) {
             moduleTittles.add(moduleTittleRepo.findByModules(module));
         }
-       return moduleTittles;
+        return moduleTittles;
     }
 
-    public void upadateStatusModuleByRole(Long idRoleUser){
-        List<Module> moduleList = moduleRepo.findAll();
+    public void updateStatusModuleByRole(Long idRoleUser) {
+        List<Module> allModules = moduleRepo.findAll();
         List<Module> modulesAffecteByRole = permissionRepo.getModuleByIdRole(idRoleUser);
 
-        for (Module module : moduleList){
-            for (Module m : modulesAffecteByRole){
-                if (m.equals(module)){
-                    module.setStatus(false);
-                    moduleRepo.save(module);
-                }else {
-                    module.setStatus(true);
-                    moduleRepo.save(module);
-                }
+        Set<Long> idsAffectes = modulesAffecteByRole.stream()
+                .map(Module::getId)
+                .collect(Collectors.toSet());
+
+        for (Module module : allModules) {
+            if (idsAffectes.contains(module.getId())) {
+                module.setStatus(true);
+            } else {
+                module.setStatus(false);
             }
+            moduleRepo.save(module);
+        }
+    }
+
+    public ModuleTittle addModuleTittle(ModuleTittle moduleTittle) {
+        return moduleTittleRepo.save(moduleTittle);
+    }
+
+    public Module addModule(Module module) {
+        return moduleRepo.save(module);
+    }
+
+
+    public void deleteModuleTittle(Long id) {
+        moduleTittleRepo.deleteById(id);
+    }
+
+    public List<Module> getAllModuleNotAffecter(Long idModuleTittle) {
+        ModuleTittle moduleTittle = moduleTittleRepo.findById(idModuleTittle).orElse(null);
+        if (moduleTittle == null) {
+            return Collections.emptyList();
+        }
+            List<Module> modules = moduleRepo.findAll();
+            return modules.stream()
+                    .filter(module -> !Objects.equals(
+                            module.getModuleTittle() != null ? module.getModuleTittle().getId() : null,
+                            moduleTittle.getId()))
+                    .collect(Collectors.toList());
+
+
+//            for (Module m : modules){
+//                if (m.getModuleTittle().getId().equals(moduleTittle.getId())){
+//                    modules.remove(m);
+//                }
+//            }
+//            return modules ;
         }
 
 
-    }
+        public void affecterModuleToModuleTittle(List<Module> modules , Long idModuleTittle){
+           for (Module module: modules){
+
+               module.setModuleTittle(moduleTittleRepo.findById(idModuleTittle).get());
+               moduleRepo.save(module);
+           }
+        }
+
+
 
 
 }
+

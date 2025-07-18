@@ -41,4 +41,8 @@ public class Entreprise {
     @JsonIgnore
     private List<Departement> departements ;
 
+
+    @ManyToMany()
+    private List<Client> clients ;
+
 }

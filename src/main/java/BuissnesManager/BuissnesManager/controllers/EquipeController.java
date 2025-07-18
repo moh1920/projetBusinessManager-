@@ -1,6 +1,7 @@
 package BuissnesManager.BuissnesManager.controllers;
 
 import BuissnesManager.BuissnesManager.entity.Equipe;
+import BuissnesManager.BuissnesManager.entity.EquipeDto;
 import BuissnesManager.BuissnesManager.entity.Role;
 import BuissnesManager.BuissnesManager.service.EquipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,19 @@ public class EquipeController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Erreur : " + e.getMessage());
         }
     }
-    @GetMapping("getAll")
+    @GetMapping("getAllEquipe")
     public ResponseEntity<?> getAll() {
-        return ResponseEntity.ok(equipeService.getAll());
+        return ResponseEntity.ok(equipeService.getAllEquipe());
+    }
+    @GetMapping("getEquipeById/{idEquipe}")
+    public ResponseEntity<?> getEquipeDtoById(@PathVariable Long idEquipe) {
+        return ResponseEntity.ok(equipeService.getEquipeDtoById(idEquipe));
+    }
+
+    @PutMapping("/update/{idEquipe}")
+    public ResponseEntity<?> updateEquipe(@RequestBody EquipeDto equipeDto, @PathVariable Long idEquipe) {
+        equipeService.updateEquipe(equipeDto, idEquipe);
+        return ResponseEntity.ok().build();
     }
 
 }

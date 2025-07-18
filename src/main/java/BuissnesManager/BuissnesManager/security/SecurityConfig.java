@@ -52,7 +52,14 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/departement/**",
-                                "/permission/**"
+                                "/permission/**",
+                                "/clients/**",
+                                "/equipe/**",
+                                "membre/**",
+                                "projets/**",
+                                "categorieProjet/**",
+                                "taches/**",
+                                "categorie-taches/**"
                         ).permitAll()
                         //.requestMatchers("/api/**").hasRole("Super_admin")
                         .anyRequest().authenticated())

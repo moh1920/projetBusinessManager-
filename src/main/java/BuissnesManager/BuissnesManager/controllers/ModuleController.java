@@ -61,13 +61,53 @@ public class ModuleController {
     @PutMapping("/update-status/{roleId}")
     public ResponseEntity<String> updateStatusByRole(@PathVariable("roleId") Long roleId) {
         try {
-            moduleService.upadateStatusModuleByRole(roleId);
-            return ResponseEntity.ok("Status des modules mis à jour avec succès pour le rôle " + roleId);
+            moduleService.updateStatusModuleByRole(roleId);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur lors de la mise à jour du statut des modules.");
         }
     }
+    @PostMapping("/addModuleTittle")
+    public ResponseEntity<?> addModuleTittle (@RequestBody ModuleTittle moduleTittle){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(moduleService.addModuleTittle(moduleTittle));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PostMapping("/addModule")
+    public ResponseEntity<?> addModule (@RequestBody Module module){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(moduleService.addModule(module));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @DeleteMapping("deleteModuleTittle/{id}")
+    public ResponseEntity<?>  deleteModuleTittle(@PathVariable Long idModuleTittle){
+        moduleService.deleteModuleTittle(idModuleTittle);
+        return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("getAllModuleNotAffecter/{id}")
+    public ResponseEntity<?> getAllModuleNotAffecter(@PathVariable Long id) {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(moduleService.getAllModuleNotAffecter(id));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    @PostMapping("affecterModuleTittle/{idModuleTittle}")
+    public ResponseEntity<?> affecterModuleToModuleTittle(@RequestBody List<Module> modules , @PathVariable Long idModuleTittle){
+        this.moduleService.affecterModuleToModuleTittle(modules,idModuleTittle);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 
 

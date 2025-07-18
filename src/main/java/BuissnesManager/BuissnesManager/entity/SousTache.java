@@ -1,34 +1,29 @@
 package BuissnesManager.BuissnesManager.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.List;
-
-
 @Entity
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Equipe {
+public class SousTache {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nom;
+    private String titre;
     private String description;
 
-    private LocalDate dateCreation;
+    @Enumerated(EnumType.STRING)
+    private TypeSousTache type;
 
-    @OneToMany(mappedBy = "equipe")
-    @JsonIgnore
-    private List<Membre> membres;
-
-
+    @ManyToOne
+    @JsonIgnoreProperties("sousTaches")
+    private Tache tache;
 }

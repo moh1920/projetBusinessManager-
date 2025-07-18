@@ -14,24 +14,20 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Module {
+public class Membre {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id ;
+    private Long id ;
 
-    private String title;
+    private String membreTitre ;
+    private String description  ;
+    private String specialite  ;
 
-    private boolean status = false;
+    @ManyToMany()
+    @JsonIgnore
+    private List<User> users;
 
     @ManyToOne
     @JsonIgnore
-    private ModuleTittle moduleTittle ;
-
-    @OneToMany(mappedBy = "module",cascade = CascadeType.ALL)
-    private List<SousModule> sousModules ;
-
-
-    @OneToMany(mappedBy = "module")
-    private List<Permission> permissions ;
-
+    private Equipe equipe ;
 }

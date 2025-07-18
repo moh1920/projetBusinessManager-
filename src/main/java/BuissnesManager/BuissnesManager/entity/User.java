@@ -30,12 +30,14 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    private String imageUrl;
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id" , unique = true)
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     @JsonIgnore
     private List<Role> roles;
@@ -47,8 +49,10 @@ public class User {
     @JsonIgnore
     private Entreprise entreprise ;
 
-    @ManyToOne()
+
+
+    @ManyToMany
     @JsonIgnore
-    private Equipe equipe ;
+    private List<Membre> membres ;
 
 }

@@ -4,14 +4,17 @@ public class UserRequest {
     private String username;
     private String email;
     private String phone;
+    private String imageUrl;
 
 
 
-    public UserRequest(String username, String email, String password,String phone) {
+
+    public UserRequest(String username, String email, String password,String phone,String imageUrl) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.phone = phone ;
+        this.imageUrl = imageUrl ;
     }
 
     public String getUsername() {
@@ -47,4 +50,12 @@ public class UserRequest {
     }
 
     private String password;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

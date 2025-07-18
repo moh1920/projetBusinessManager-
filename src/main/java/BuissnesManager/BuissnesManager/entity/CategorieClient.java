@@ -9,29 +9,21 @@ import lombok.Setter;
 
 import java.util.List;
 
+@AllArgsConstructor
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Module {
+public class CategorieClient {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id ;
+    private Long id;
 
-    private String title;
+    private String nom;
+    private String description;
 
-    private boolean status = false;
-
-    @ManyToOne
+    @OneToMany(mappedBy = "categorieClient")
     @JsonIgnore
-    private ModuleTittle moduleTittle ;
-
-    @OneToMany(mappedBy = "module",cascade = CascadeType.ALL)
-    private List<SousModule> sousModules ;
-
-
-    @OneToMany(mappedBy = "module")
-    private List<Permission> permissions ;
-
+    private List<Client> clients ;
 }
