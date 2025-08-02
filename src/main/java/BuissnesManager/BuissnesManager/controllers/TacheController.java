@@ -1,5 +1,6 @@
 package BuissnesManager.BuissnesManager.controllers;
 
+import BuissnesManager.BuissnesManager.entity.StatutTache;
 import BuissnesManager.BuissnesManager.entity.Tache;
 import BuissnesManager.BuissnesManager.service.TacheService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +59,36 @@ public class TacheController {
         return ResponseEntity.status(HttpStatus.OK).body(tacheService.getAllTachesByProjet(idProjet)) ;
 
     }
+
+    @PutMapping("/assign-tache-membre/{idTache}/{idMembre}")
+    public ResponseEntity<Void> assignTacheToMembre(
+            @PathVariable Long idTache,
+            @PathVariable Long idMembre) {
+        try {
+            tacheService.assigneTacheToMembre(idTache, idMembre);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    @PutMapping("/{id}/{statutTache}")
+    public ResponseEntity<Void> updateStatutTache(
+            @PathVariable Long id,
+            @PathVariable StatutTache statutTache
+
+    ) {
+        try {
+
+            tacheService.updateTacheStatut(id, statutTache);
+
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+
+
 }

@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -22,6 +24,11 @@ public class SousTache {
 
     @Enumerated(EnumType.STRING)
     private TypeSousTache type;
+    private LocalDate dateDebut ;
+    private LocalDate dateFin ;
+
+    private Long progres ;
+    private Long duree ;
 
     @ManyToOne
     @JsonIgnoreProperties("sousTaches")

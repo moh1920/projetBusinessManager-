@@ -44,6 +44,16 @@ public class Tache {
     @JsonIgnoreProperties("tache")
     private List<SousTache> sousTaches ;
 
+    private String predecesseur ;
+    private Long duree ;
+    private  Long progres ;
+
+
+
+
+    @ManyToOne
+    @JsonIgnoreProperties("taches")
+    private Membre membre ;
 
 
 

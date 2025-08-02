@@ -6,8 +6,11 @@ import BuissnesManager.BuissnesManager.entity.StatutProjet;
 import BuissnesManager.BuissnesManager.repository.CategorieProjetRepo;
 import BuissnesManager.BuissnesManager.repository.ProjetRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,5 +62,27 @@ public class ProjetService {
         projet.setStatut(statutProjet);
         projetRepo.save(projet);
     }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void updateStatutsDeProjetTerminee() {
+        List<Projet> projets = projetRepo.findAll();
+        List<Projet> projetsAMettreAJour = new ArrayList<>();
+
+        for (Projet projet : projets) {
+            if (projet.getDateFin() != null
+                    && !projet.getStatut().equals(StatutProjet.TERMINE)
+                    && !projet.getDateFin().isAfter(LocalDate.now())) {
+
+                projet.setStatut(StatutProjet.TERMINE);
+                projetsAMettreAJour.add(projet);
+            }
+        }
+
+        if (!projetsAMettreAJour.isEmpty()) {
+            projetRepo.saveAll(projetsAMettreAJour);
+        }
+    }
+
 }
+
 

@@ -1,6 +1,7 @@
 package BuissnesManager.BuissnesManager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,4 +31,9 @@ public class Membre {
     @ManyToOne
     @JsonIgnore
     private Equipe equipe ;
+
+    @OneToMany
+    @JsonIgnoreProperties("membre")
+    private List<Tache> taches ;
+
 }

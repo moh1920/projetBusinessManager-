@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 "projets/**",
                                 "categorieProjet/**",
                                 "taches/**",
-                                "categorie-taches/**"
+                                "categorie-taches/**",
+                                "sous-taches/**"
                         ).permitAll()
                         //.requestMatchers("/api/**").hasRole("Super_admin")
                         .anyRequest().authenticated())
