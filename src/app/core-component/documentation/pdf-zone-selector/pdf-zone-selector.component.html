@@ -1,0 +1,121 @@
+<div class="pdf-container">
+  <div class="controls">
+    <input type="file" (change)="onFileSelected($event)" accept=".pdf" />
+    <select [(ngModel)]="selectedZoneType" class="zone-type-select">
+      <option value="text">Texte</option>
+      <option value="image">Image</option>
+      <option value="signature">Signature</option>
+      <option value="date">Date</option>
+      <option value="number">Numéro</option>
+    </select>
+
+    <select [(ngModel)]="typeDeDocument" class="form-control" id="typeDeDocument">
+      <option value="">-- Sélectionner le type de document --</option>
+      <option value="CIN">Carte d'identité</option>
+      <option value="RECU">Reçu</option>
+      <option value="FACTURE">Facture</option>
+      <!-- etc. -->
+    </select>
+
+    <button (click)="saveZonesToBackend()" [disabled]="zones.length === 0 || isLoading">
+      {{ isLoading ? 'Sauvegarde...' : 'Sauvegarder les zones' }}
+    </button>
+
+    <button (click)="extractZonesContent()" [disabled]="zones.length === 0 || isLoading" class="extract-btn">
+      {{ isLoading ? 'Extraction...' : 'Extraire le contenu' }}
+    </button>
+
+    <button (click)="clearZones()" class="clear-btn" [disabled]="zones.length === 0">
+      Effacer les zones
+    </button>
+
+    <div class="page-controls" *ngIf="totalPages > 1">
+      <button (click)="previousPage()" [disabled]="currentPage <= 1">←</button>
+      <span>Page {{currentPage}} / {{totalPages}}</span>
+      <button (click)="nextPage()" [disabled]="currentPage >= totalPages">→</button>
+    </div>
+  </div>
+
+  <div class="pdf-viewer" #pdfViewer>
+    <div class="canvas-container" style="position: relative; display: inline-block;">
+      <canvas
+        #pdfCanvas
+        (mousedown)="startSelection($event)"
+        (mousemove)="updateSelection($event)"
+        (mouseup)="endSelection($event)"
+        style="cursor: crosshair; border: 1px solid #ccc; display: block; user-select: none;">
+      </canvas>
+
+      <!-- Zone en cours de sélection -->
+      <div
+        *ngIf="isSelecting && selectionWidth > 0 && selectionHeight > 0"
+        class="selection-overlay"
+        [style.position]="'absolute'"
+        [style.left.px]="currentSelection.x"
+        [style.top.px]="currentSelection.y"
+        [style.width.px]="selectionWidth"
+        [style.height.px]="selectionHeight"
+        [style.border]="'2px dashed ' + getZoneColor(selectedZoneType)"
+        [style.background-color]="getZoneColor(selectedZoneType) + '20'"
+        [style.pointer-events]="'none'"
+        [style.z-index]="'10'">
+      </div>
+
+      <!-- Zones finalisées -->
+      <div
+        *ngFor="let zone of getCurrentPageZones(); let i = index"
+        class="zone-overlay"
+        [ngClass]="'zone-' + zone.type"
+        [style.position]="'absolute'"
+        [style.left.px]="zone.x"
+        [style.top.px]="zone.y"
+        [style.width.px]="zone.width"
+        [style.height.px]="zone.height"
+        [style.border]="'2px solid ' + getZoneColor(zone.type)"
+        [style.background-color]="getZoneColor(zone.type) + '15'"
+        [style.pointer-events]="'auto'"
+        [style.z-index]="'5'"
+        title="{{zone.type}} - Cliquez sur × pour supprimer">
+
+        <button
+          class="zone-delete"
+          (click)="deleteZone(i)"
+          title="Supprimer cette zone"
+          style="position: absolute; top: -8px; right: -8px; width: 16px; height: 16px;
+                 background: red; color: white; border: none; border-radius: 50%;
+                 cursor: pointer; font-size: 10px; line-height: 1; z-index: 15;">
+          ×
+        </button>
+
+        <div
+          class="zone-info"
+          style="position: absolute; bottom: 2px; left: 2px; background: rgba(0,0,0,0.7);
+                 color: white; font-size: 10px; padding: 1px 4px; border-radius: 2px;">
+          <span class="zone-type">{{zone.type}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="status" *ngIf="pdfLoaded">
+    <p>PDF chargé: {{totalPages}} page(s) - {{zones.length}} zone(s) sélectionnée(s)</p>
+    <p *ngIf="zones.length > 0">Page actuelle: {{getCurrentPageZones().length}} zone(s)</p>
+    <p *ngIf="isSelecting">Sélection en cours... ({{selectionWidth}}×{{selectionHeight}})</p>
+  </div>
+
+  <!-- Résultats d'extraction -->
+  <div class="results" *ngIf="extractionResults.length > 0">
+    <h3>Contenu extrait :</h3>
+    <div *ngFor="let result of extractionResults; let i = index" class="result-item">
+      <h4>Zone {{i + 1}} ({{result.zoneType || 'N/A'}})</h4>
+      <div class="result-content">{{result.content || 'Aucun contenu détecté'}}</div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner"></div>
+    <p>{{ zones.length > 0 ? 'Traitement en cours...' : 'Chargement du PDF...' }}</p>
+  </div>
+</div>

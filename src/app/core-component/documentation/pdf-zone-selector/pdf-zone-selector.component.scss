@@ -1,0 +1,233 @@
+
+.pdf-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.controls input[type="file"] {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+}
+
+.zone-type-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+}
+
+.controls button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.controls button:not(.clear-btn):not(.extract-btn) {
+  background: #007bff;
+  color: white;
+}
+
+.controls button:not(.clear-btn):not(.extract-btn):hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.extract-btn {
+  background: #28a745;
+  color: white;
+}
+
+.extract-btn:hover:not(:disabled) {
+  background: #1e7e34;
+}
+
+.clear-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.clear-btn:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.controls button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.page-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.page-controls button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-viewer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  background: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  overflow: auto;
+}
+
+.zone-overlay {
+  position: absolute;
+  border: 2px solid;
+  background: rgba(52, 152, 219, 0.1);
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.zone-overlay:hover {
+  background: rgba(52, 152, 219, 0.2);
+}
+
+.zone-text { border-color: #3498db; }
+.zone-image { border-color: #e74c3c; }
+.zone-signature { border-color: #9b59b6; }
+.zone-date { border-color: #f39c12; }
+.zone-number { border-color: #2ecc71; }
+
+.zone-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background: #dc3545;
+  color: white;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.zone-delete:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+.zone-info {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.selection-overlay {
+  position: absolute;
+  border: 2px dashed #007bff;
+  background: rgba(0, 123, 255, 0.1);
+  pointer-events: none;
+}
+
+.status {
+  text-align: center;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.results {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.results h3 {
+  margin-top: 0;
+  color: #343a40;
+}
+
+.result-item {
+  margin-bottom: 15px;
+  padding: 15px;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
+
+.result-item h4 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 16px;
+}
+
+.result-content {
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #6c757d;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
