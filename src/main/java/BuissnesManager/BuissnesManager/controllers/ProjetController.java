@@ -77,5 +77,18 @@ public class ProjetController {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
+    @GetMapping("/count-by-status")
+    public ResponseEntity<Integer> getNombreProjetByStatus(@RequestParam StatutProjet statut) {
+        int count = projetService.nombreProjetByStatus(statut);
+        return ResponseEntity.ok(count);
+    }
+    @GetMapping("/{id}/nombre-taches")
+    public ResponseEntity<Integer> nombreDeTacheByProjet(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(projetService.nombreDeTacheByProjet(id));
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }

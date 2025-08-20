@@ -1,6 +1,7 @@
 package BuissnesManager.BuissnesManager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,5 +35,9 @@ public class Client {
     @ManyToMany
     @JsonIgnore
     private List<Entreprise> entreprises ;
+
+    @OneToMany(mappedBy = "client")
+    @JsonIgnoreProperties(value = "client")
+    private List<FactureDeVente> factureDeVentes ;
 
 }

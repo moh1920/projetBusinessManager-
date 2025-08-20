@@ -1,11 +1,8 @@
 package BuissnesManager.BuissnesManager.service;
 
-import BuissnesManager.BuissnesManager.entity.StatutTache;
-import BuissnesManager.BuissnesManager.entity.Tache;
-import BuissnesManager.BuissnesManager.repository.CategorieTacheRepo;
-import BuissnesManager.BuissnesManager.repository.MembreRepo;
-import BuissnesManager.BuissnesManager.repository.ProjetRepo;
-import BuissnesManager.BuissnesManager.repository.TacheRepo;
+import BuissnesManager.BuissnesManager.entity.*;
+import BuissnesManager.BuissnesManager.repository.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,14 +21,32 @@ public class TacheService {
     private CategorieTacheRepo categorieTacheRepo ;
     @Autowired
     private ProjetRepo projetRepo ;
+    @Autowired
+    private SousTacheRepo sousTacheRepo ;
 
     @Autowired
     private MembreRepo membreRepo ;
 
-    public Tache createTache(Tache tache,Long idCategorieTache ,Long idProjet) {
-        tache.setCategorieTache(categorieTacheRepo.findById(idCategorieTache).get());
-        tache.setProjet(projetRepo.findById(idProjet).get());
-        return tacheRepo.save(tache);
+    public Tache createTache(Tache tache, Long idCategorieTache, Long idProjet) {
+        Optional<Projet> optionalProjet = projetRepo.findById(idProjet);
+        Optional<CategorieTache> optionalCategorieTache = categorieTacheRepo.findById(idCategorieTache);
+
+        if (optionalProjet.isPresent() && optionalCategorieTache.isPresent()) {
+            Projet projet = optionalProjet.get();
+
+            if (tache.getDateDebut().isAfter(projet.getDateDebut()) &&
+                    tache.getDateFin().isBefore(projet.getDateFin())) {
+
+                tache.setCategorieTache(optionalCategorieTache.get());
+                tache.setProjet(projet);
+                return tacheRepo.save(tache);
+
+            } else {
+                throw new IllegalArgumentException("Les dates de la tâche doivent être comprises dans celles du projet.");
+            }
+        } else {
+            throw new EntityNotFoundException("Projet ou catégorie de tâche introuvable.");
+        }
     }
 
     public List<Tache> getAllTaches() {
@@ -91,6 +106,36 @@ public class TacheService {
             }
         }
     }
+
+
+    public int nombreTacheByStatus(StatutTache statutTache){
+        List<Tache> taches = tacheRepo.findAllByStatut(statutTache) ;
+        return taches.size() ;
+    }
+
+    public SousTache getSousTacheById(Long id){
+        return   sousTacheRepo.findById(id).get() ;
+    }
+
+
+
+    public SousTache updateSousTache(Long id, SousTache updatedSousTache) {
+        return sousTacheRepo.findById(id).map(sousTache -> {
+            sousTache.setTitre(updatedSousTache.getTitre());
+            sousTache.setDescription(updatedSousTache.getDescription());
+            sousTache.setType(updatedSousTache.getType());
+            sousTache.setDateDebut(updatedSousTache.getDateDebut());
+            sousTache.setDateFin(updatedSousTache.getDateFin());
+            sousTache.setProgres(updatedSousTache.getProgres());
+            sousTache.setDuree(updatedSousTache.getDuree());
+            sousTache.setTache(updatedSousTache.getTache());
+            return sousTacheRepo.save(sousTache);
+        }).orElseThrow(() -> new RuntimeException("Sous-tâche non trouvée avec l'id : " + id));
+    }
+
+
+
+
 
 
 }

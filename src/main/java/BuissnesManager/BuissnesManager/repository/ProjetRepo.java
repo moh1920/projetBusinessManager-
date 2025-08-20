@@ -9,4 +9,5 @@ import java.util.List;
 public interface ProjetRepo extends JpaRepository<Projet,Long> {
 
     List<Projet> findAllByStatut(StatutProjet statutProjet) ;
+
 }

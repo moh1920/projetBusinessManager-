@@ -82,6 +82,15 @@ public class ProjetService {
             projetRepo.saveAll(projetsAMettreAJour);
         }
     }
+    public int nombreProjetByStatus(StatutProjet statutProjet){
+        List<Projet> projets = projetRepo.findAllByStatut(statutProjet) ;
+        return projets.size() ;
+    }
+    public int nombreDeTacheByProjet(Long id){
+        Projet projet = projetRepo.findById(id).get();
+        return  projet.getTaches().size() ;
+    }
+
 
 }
 

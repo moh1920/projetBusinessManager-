@@ -1,7 +1,9 @@
 package BuissnesManager.BuissnesManager.service;
 
+import BuissnesManager.BuissnesManager.entity.CaracteristiqueFactureEntreprise;
 import BuissnesManager.BuissnesManager.entity.Entreprise;
 import BuissnesManager.BuissnesManager.entity.User;
+import BuissnesManager.BuissnesManager.repository.CaracteristiqueFactureEntrepriseRepo;
 import BuissnesManager.BuissnesManager.repository.EntrepriseRepo;
 import BuissnesManager.BuissnesManager.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ public class EntrepriseService {
     private EntrepriseRepo entrepriseRepository;
     @Autowired
     private UserRepo userRepo ;
+    @Autowired
+    private CaracteristiqueFactureEntrepriseRepo caracteristiqueFactureEntrepriseRepo ;
 
 
     public List<Entreprise> getAllEntreprise(){
@@ -48,6 +52,9 @@ public class EntrepriseService {
             entreprise.setSiteWeb(entrepriseDetails.getSiteWeb());
             entreprise.setDateCreation(entrepriseDetails.getDateCreation());
             entreprise.setDateDerniereModification(entrepriseDetails.getDateDerniereModification());
+            entreprise.setEmail(entrepriseDetails.getEmail());
+            entreprise.setTelephone(entrepriseDetails.getTelephone());
+            entreprise.setAdresse(entrepriseDetails.getAdresse());
             return entrepriseRepository.save(entreprise);
         } else {
             throw new RuntimeException("Entreprise non trouvée avec ID : " + id);
@@ -66,4 +73,10 @@ public class EntrepriseService {
     public Entreprise getById(Long idEntreprise){
         return entrepriseRepository.findById(idEntreprise).get();
     }
+
+
+    public CaracteristiqueFactureEntreprise addCaracteristiqueFactureEntreprise(CaracteristiqueFactureEntreprise caracteristiqueFactureEntreprise){
+        return caracteristiqueFactureEntrepriseRepo.save(caracteristiqueFactureEntreprise);
+    }
+
 }

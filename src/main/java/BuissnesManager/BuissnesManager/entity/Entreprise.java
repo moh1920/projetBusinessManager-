@@ -1,6 +1,7 @@
 package BuissnesManager.BuissnesManager.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.GroupSequence;
 import lombok.AllArgsConstructor;
@@ -31,6 +32,9 @@ public class Entreprise {
     private String siteWeb;
     private LocalDate dateCreation;
     private LocalDateTime dateDerniereModification;
+    private String email ;
+    private String adresse ;
+    private String Telephone ;
 
     @OneToMany(mappedBy = "entreprise")
     @JsonIgnore
@@ -44,5 +48,9 @@ public class Entreprise {
 
     @ManyToMany()
     private List<Client> clients ;
+
+    @OneToOne(mappedBy = "entreprise")
+    @JsonIgnoreProperties(value = "entreprise")
+    private CaracteristiqueFactureEntreprise caracteristiqueFactureEntreprise ;
 
 }

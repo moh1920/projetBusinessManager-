@@ -60,7 +60,11 @@ public class SecurityConfig {
                                 "categorieProjet/**",
                                 "taches/**",
                                 "categorie-taches/**",
-                                "sous-taches/**"
+                                "sous-taches/**",
+                                "/document/**",
+                                "/evenement/**",
+                                "/facture/**",
+                                "/factures-vente/**"
                         ).permitAll()
                         //.requestMatchers("/api/**").hasRole("Super_admin")
                         .anyRequest().authenticated())

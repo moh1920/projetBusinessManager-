@@ -1,6 +1,7 @@
 package BuissnesManager.BuissnesManager.controllers;
 
 
+import BuissnesManager.BuissnesManager.entity.CaracteristiqueFactureEntreprise;
 import BuissnesManager.BuissnesManager.entity.Entreprise;
 import BuissnesManager.BuissnesManager.service.EntrepriseService;
 import org.apache.catalina.valves.rewrite.RewriteCond;
@@ -76,5 +77,16 @@ public class EntrepriseController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Entreprise non trouver");
         }
     }
+
+
+    @PostMapping("ajouterCaracteristiqueFactureEntreprise")
+    private ResponseEntity<?> ajouterCaracteristiqueFactureEntreprise(@RequestBody CaracteristiqueFactureEntreprise caracteristiqueFactureEntreprise){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(entrepriseService.addCaracteristiqueFactureEntreprise(caracteristiqueFactureEntreprise));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+    }
+
 
 }

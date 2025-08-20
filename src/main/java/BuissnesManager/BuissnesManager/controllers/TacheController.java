@@ -1,5 +1,7 @@
 package BuissnesManager.BuissnesManager.controllers;
 
+import BuissnesManager.BuissnesManager.entity.SousTache;
+import BuissnesManager.BuissnesManager.entity.StatutProjet;
 import BuissnesManager.BuissnesManager.entity.StatutTache;
 import BuissnesManager.BuissnesManager.entity.Tache;
 import BuissnesManager.BuissnesManager.service.TacheService;
@@ -86,6 +88,32 @@ public class TacheController {
             return ResponseEntity.ok().build();
         }catch (Exception e) {
             return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/count-by-status")
+    public ResponseEntity<Integer> getNombreTacheByStatus(@RequestParam StatutTache statut) {
+        int count = tacheService.nombreTacheByStatus(statut);
+        return ResponseEntity.ok(count);
+    }
+
+
+    @GetMapping("getSousTacheById/{id}")
+    public ResponseEntity<?> getSousTacheById(@PathVariable Long id) {
+        try {
+            tacheService.getSousTacheById(id);
+            return ResponseEntity.ok().build();
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("updateSousTache/{id}")
+    public ResponseEntity<?> updateSousTache(@PathVariable Long id, @RequestBody SousTache sousTache) {
+        try {
+            return ResponseEntity.ok(tacheService.updateSousTache(id, sousTache));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
