@@ -72,6 +72,7 @@ public class AuthController {
             response.setIdUsers(user.getId());
             response.setToken(token);
             response.setIdRoleUser(user.getRoles().get(0).getId());
+            System.out.println(response.getIdRoleUser());
 
 
 
@@ -96,4 +97,16 @@ public class AuthController {
     public ResponseEntity<?> testToken() {
         return ResponseEntity.ok("Token valide ! Vous êtes authentifié.");
     }
+
+    @PostMapping("/refreshPermissionDtoList")
+    public ResponseEntity<?> refreshPermissionDtoList(Long userId) {
+        User user = userRepo.findById(userId).get();
+        List<PermissionDto> permissionDtoList = new ArrayList<>();
+        for (Role role : user.getRoles()){
+            permissionDtoList =  permissionService.getPermissionsByRole(role.getId());
+        }
+        return ResponseEntity.ok(permissionDtoList);
+
+    }
+
 }

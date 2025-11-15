@@ -25,9 +25,11 @@ public class Tache {
     private String description;
     private LocalDate dateDebut;
     private LocalDate dateFin;
+    private String predecesseur ;
+    private Long duree ;
+    private  Long progres ;
 
-    @Enumerated(EnumType.STRING)
-    private StatutTache statut;
+
 
     @Enumerated(EnumType.STRING)
     private PrioriteDeTache priorite;
@@ -44,10 +46,9 @@ public class Tache {
     @JsonIgnoreProperties("tache")
     private List<SousTache> sousTaches ;
 
-    private String predecesseur ;
-    private Long duree ;
-    private  Long progres ;
 
+    @Enumerated(EnumType.STRING)
+    private StatutTache statut;
 
 
 

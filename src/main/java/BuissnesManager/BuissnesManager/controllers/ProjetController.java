@@ -33,6 +33,11 @@ public class ProjetController {
         List<Projet> projets = projetService.getAllProjets();
         return ResponseEntity.ok(projets);
     }
+    @GetMapping("getAllProjetNotBudget")
+    public ResponseEntity<?> getAllProjetNotBudget() {
+        List<Projet> projets = projetService.getAllProjetNotBudget();
+        return ResponseEntity.ok(projets);
+    }
 
     @GetMapping("getById/{id}")
     public ResponseEntity<?> getProjetById(@PathVariable Long id) {

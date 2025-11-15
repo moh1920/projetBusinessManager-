@@ -2,6 +2,7 @@ package BuissnesManager.BuissnesManager.controllers;
 
 import BuissnesManager.BuissnesManager.entity.Module;
 import BuissnesManager.BuissnesManager.entity.ModuleTittle;
+import BuissnesManager.BuissnesManager.entity.SousModule;
 import BuissnesManager.BuissnesManager.service.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,11 @@ public class ModuleController {
     public ResponseEntity<?> getAllModules() {
         List<Module> modules = moduleService.getAllModule();
         return ResponseEntity.ok(modules);
+    }
+    @GetMapping("getAllSousModule")
+        public ResponseEntity<?> getAllSousModule() {
+        List<SousModule> sousModules = moduleService.getAllSousModule();
+        return ResponseEntity.ok(sousModules);
     }
 
     @GetMapping("getModule/{id}")
@@ -106,6 +112,25 @@ public class ModuleController {
         this.moduleService.affecterModuleToModuleTittle(modules,idModuleTittle);
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping("/addModuleWithTitreModule/{idModuleTitre}")
+    public ResponseEntity<?> addModuleWithTitreModule (@RequestBody Module module,@PathVariable Long idModuleTitre){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(moduleService.addModuleWithTitreModule(module,idModuleTitre));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+    @PostMapping("/createSousModule/{idModule}")
+    public ResponseEntity<?> createSousModule (@RequestBody SousModule sousModule,@PathVariable Long idModule){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(moduleService.createSousModule(sousModule,idModule));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
 
 
 

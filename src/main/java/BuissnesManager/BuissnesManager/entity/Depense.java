@@ -7,35 +7,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 import java.time.LocalDate;
-import java.util.List;
 
 @AllArgsConstructor
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Budget {
+public class Depense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id ;
 
-    private String nom;
-
+    private String description;
     private Double montant;
-
-    private LocalDate dateDebut;
-
-    private LocalDate dateFin;
+    private LocalDate dateDepense;
 
 
-    @Column(unique = true)
-    private Long idProjet ;
+    @ManyToOne()
+    @JsonIgnoreProperties(value = "depense")
+    private Budget budget ;
 
-
-    @OneToMany(mappedBy = "budget")
-    @JsonIgnoreProperties(value = "budget")
-    private List<Depense> depenses ;
+    @ManyToOne
+    @JsonIgnoreProperties(value = "depense")
+    private CategorieDepense categorieDepense ;
 
 }

@@ -3,9 +3,11 @@ package BuissnesManager.BuissnesManager.service;
 import BuissnesManager.BuissnesManager.entity.Module;
 import BuissnesManager.BuissnesManager.entity.ModuleTittle;
 import BuissnesManager.BuissnesManager.entity.Role;
+import BuissnesManager.BuissnesManager.entity.SousModule;
 import BuissnesManager.BuissnesManager.repository.ModuleRepo;
 import BuissnesManager.BuissnesManager.repository.ModuleTittleRepo;
 import BuissnesManager.BuissnesManager.repository.PermissionRepo;
+import BuissnesManager.BuissnesManager.repository.SousModuleRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +25,18 @@ public class ModuleService {
     @Autowired
     private ModuleTittleRepo moduleTittleRepo;
 
+    @Autowired
+    private SousModuleRepo sousModuleRepo ;
+
     public List<ModuleTittle> getAllModuleTitlle() {
         return moduleTittleRepo.findAll();
     }
 
     public List<Module> getAllModule() {
         return moduleRepo.findAll();
+    }
+    public List<SousModule> getAllSousModule(){
+        return sousModuleRepo.findAll();
     }
 
     public Module getByIdModule(Long idModule) {
@@ -110,6 +118,19 @@ public class ModuleService {
                moduleRepo.save(module);
            }
         }
+
+
+        public Module addModuleWithTitreModule(Module module,Long idModuleTitre){
+           ModuleTittle  moduleTittle = moduleTittleRepo.findById(idModuleTitre).get() ;
+           module.setModuleTittle(moduleTittle);
+           return moduleRepo.save(module);
+        }
+        public SousModule createSousModule(SousModule sousModule,Long idModule){
+            Module module = moduleRepo.findById(idModule).get();
+            sousModule.setModule(module);
+            return sousModuleRepo.save(sousModule);
+        }
+
 
 
 

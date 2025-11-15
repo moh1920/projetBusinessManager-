@@ -2,9 +2,12 @@ package BuissnesManager.BuissnesManager.controllers;
 
 import BuissnesManager.BuissnesManager.entity.FactureDeVente;
 import BuissnesManager.BuissnesManager.service.FactureDeVenteService;
+import BuissnesManager.BuissnesManager.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -64,5 +67,24 @@ public class FactureDeVenteController {
 
         factureDeVenteService.affecterFatureClient(idFacture, idClient);
         return ResponseEntity.ok().build();
+    }
+
+
+    @Autowired
+    private MailService mailService;
+
+    @PostMapping(value = "/send-facture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> sendFacture(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("to") String to,
+            @RequestParam("subject") String subject,
+            @RequestParam("text") String text
+    ) {
+        try {
+            mailService.sendMailWithAttachment(to, subject, text, file);
+            return ResponseEntity.ok("Email envoyé avec succès !");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erreur : " + e.getMessage());
+        }
     }
 }

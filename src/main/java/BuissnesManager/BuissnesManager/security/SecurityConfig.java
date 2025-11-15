@@ -64,7 +64,10 @@ public class SecurityConfig {
                                 "/document/**",
                                 "/evenement/**",
                                 "/facture/**",
-                                "/factures-vente/**"
+                                "/factures-vente/**",
+                                "budgets/**",
+                                "depenses/**",
+                                "categories-depenses/**"
                         ).permitAll()
                         //.requestMatchers("/api/**").hasRole("Super_admin")
                         .anyRequest().authenticated())

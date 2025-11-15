@@ -1,8 +1,10 @@
 package BuissnesManager.BuissnesManager.service;
 
+import BuissnesManager.BuissnesManager.entity.Budget;
 import BuissnesManager.BuissnesManager.entity.CategorieProjet;
 import BuissnesManager.BuissnesManager.entity.Projet;
 import BuissnesManager.BuissnesManager.entity.StatutProjet;
+import BuissnesManager.BuissnesManager.repository.BudgetRepo;
 import BuissnesManager.BuissnesManager.repository.CategorieProjetRepo;
 import BuissnesManager.BuissnesManager.repository.ProjetRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -21,6 +24,8 @@ public class ProjetService {
     private ProjetRepo projetRepo;
     @Autowired
     private CategorieProjetRepo categorieProjetRepo ;
+    @Autowired
+    private BudgetRepo budgetRepo ;
 
     public Projet createProjet(Projet projet,Long idCategorieProjet) {
         CategorieProjet categorieProjet =categorieProjetRepo.findById(idCategorieProjet).get();
@@ -91,6 +96,19 @@ public class ProjetService {
         return  projet.getTaches().size() ;
     }
 
+    public List<Projet> getAllProjetNotBudget(){
+        List<Projet> projets = projetRepo.findAll() ;
+        List<Budget> budgets = budgetRepo.findAll() ;
+        List<Projet> projetfilter = new ArrayList<>();
+        for (Projet p : projets){
+            for (Budget b : budgets){
+                if (!Objects.equals(p.getId(), b.getIdProjet())){
+                    projetfilter.add(p);
+                }
+            }
+        }
+        return projetfilter ;
+    }
 
 }
 

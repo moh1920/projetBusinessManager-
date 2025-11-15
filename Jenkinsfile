@@ -22,15 +22,15 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo "⚙️ Building application with Maven..."
-                sh 'mvn clean install -DskipTests=false'
+                echo "⚙️ Building with CI profile (H2 instead of PostgreSQL)..."
+                sh 'mvn clean install -Dspring.profiles.active=ci -DskipTests=false'
             }
         }
 
         stage('Package') {
             steps {
                 echo "📦 Packaging application..."
-                sh 'mvn package'
+                sh 'mvn package -Dspring.profiles.active=ci'
             }
         }
 
