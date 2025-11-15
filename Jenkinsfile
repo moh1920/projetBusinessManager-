@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = "moh1920/business-manager"
+        IMAGE_NAME = "moh446/business-manager"
         IMAGE_TAG = "latest"
     }
 
