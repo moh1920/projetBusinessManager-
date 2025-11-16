@@ -65,6 +65,14 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarQube_businessManager') {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
     }
 
     post {
