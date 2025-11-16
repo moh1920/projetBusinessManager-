@@ -1,110 +1,57 @@
-#spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/BusinessManager
-#    username: sayari
-#    password: sayari
-#    driver-class-name: org.postgresql.Driver
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    show-sql: false
-#    properties:
-#      hibernate:
-#        format_sql: true
-#    database: postgresql
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
-#  mail:
-#    host: smtp.gmail.com
-#    port: 465
-#    username: sayarim558@gmail.com
-#    password: qejy ajpu qaof vfez
-#    properties:
-#      mail:
-#        smtp:
-#          auth: true
-#          ssl:
-#            enable: true
-#            trust: "*"
-#        starttls:
-#          enable: true
-#    protocol: smtp
-#
-#
-#springdoc:
-#  default-produces-media-type: application/json
-#
-#server:
-#  port: 8020
-#
-#
-#spring.batch.jdbc.initialize-schema: always
-#jwt_secret:
-#  sayariMohamed123123
-#jwt.expiration-time:
-#  36000000    # 10h en millisecondes (1000 * 60 * 60 * 10)
-#jwt.issuer:
-#  SymatiqueBuissnesManager
-#
-#cloudinary:
-#  cloud_name:
-#    dpvqw1nd4
-#  api_key:
-#    856591911111161
-#  api_secret:
-#    1JfmQN2QwIVES5bE-tBXrXB8ojA
-#
-#
-
-###############################################
-# 🔵  CONFIG CI/CD POUR JENKINS (H2 IN MEMORY)
-###############################################
-
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
-
+    url: jdbc:postgresql://localhost:5432/BusinessManager
+    username: sayari
+    password: sayari
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: false
-    database-platform: org.hibernate.dialect.H2Dialect
-
-  # Désactiver Flyway (évite les échecs en CI)
-  flyway:
-    enabled: false
-
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
   mail:
-    host: localhost
-    port: 1025
-    username:
-    password:
+    host: smtp.gmail.com
+    port: 465
+    username: sayarim558@gmail.com
+    password: qejy ajpu qaof vfez
     properties:
       mail:
         smtp:
-          auth: false
-          starttls:
-            enable: false
+          auth: true
+          ssl:
+            enable: true
+            trust: "*"
+        starttls:
+          enable: true
+    protocol: smtp
 
-# Cloudinary désactivé pour Jenkins (mock)
-cloudinary:
-  cloud_name: dummy
-  api_key: dummy
-  api_secret: dummy
 
-# JWT fake values pour CI
-jwt_secret: ci-secret-key-123456
-jwt:
-  expiration-time: 3600000
-  issuer: CI_PIPELINE
+springdoc:
+  default-produces-media-type: application/json
 
 server:
-  port: 0   # port aléatoire pour éviter les conflits
+  port: 8020
 
-logging:
-  level:
-    root: ERROR
-    org.springframework: WARN
-    org.hibernate: WARN
+
+spring.batch.jdbc.initialize-schema: always
+jwt_secret:
+  sayariMohamed123123
+jwt.expiration-time:
+  36000000    # 10h en millisecondes (1000 * 60 * 60 * 10)
+jwt.issuer:
+  SymatiqueBuissnesManager
+
+cloudinary:
+  cloud_name:
+    dpvqw1nd4
+  api_key:
+    856591911111161
+  api_secret:
+    1JfmQN2QwIVES5bE-tBXrXB8ojA
+
+
+
